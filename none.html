@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>有"色"眼鏡</title>
+    <link rel="stylesheet" href="./none.css"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <p hidden class="endmessage">✕</p>
+
+    <div class="gradeborad">
+      <p id="grades">0</p>
+    </div>
+
+    <div class="CountDownMenu">
+        <p id="countdownnum">5</p>
+    </div>
+
+    <div class="btngroup group">
+      <input type="button" class="check btnleft">
+      <input type="button" class="check btnmain">
+      <input type="button" class="check btnright">
+    </div>
+
+    <div class="wrap">
+      
+    </div>
+    <div class="popup-wrap" id="letmeopen">
+      <div class="popup-box transform-out">
+        <h2>有"色"眼光</h2>
+        <h3>請在三個格子當中選出顏色最橘的那個，只要失敗一次即結束，若是答對一定題數作答時間還會降低，但積分累積更快</h3>
+        <a class="close-btn popup-close" href="#">開始</a>
+      </div>
+    </div>
+    
+</body>
+</html>
+
+<script>
+    
+    function closeWindow(){
+      $(".popup-wrap").fadeOut(200);
+      $(".popup-box").removeClass("transform-in").addClass("transform-out");
+      $(".CountDownMenu").add(".gradeborad").addClass("afterpopup");
+      $(".check").addClass("btnafterpopup");
+      event.preventDefault();
+    }
+
+    function stopCount(index) {
+      window.clearInterval(timmer);
+      $(".endmessage").toggle();
+      $(".btnleft").add(".btnmain").add(".btnright").add(".CountDownMenu afterpopup").toggle();
+      index = 0;
+    }
+
+    function countDown() {
+      console.log(index);
+      index > 0 ? CountDownNum.innerText = index: stopCount(index);
+      index--;
+    }
+
+    function makeColorTest() {
+    //難度上調
+      if(currectNum >= currectlevel){
+        total--; 
+        currectpoint = currectpoint * 2;
+        currectlevel = currectlevel * 2 + 5;
+      } 
+
+      index = total;
+
+      answer = Math.floor( Math.random() * 3 + 1);
+      console.log(answer);
+      
+      switch (answer) {
+      case 1:
+        $(".btnleft").css("background-color","#fa5818");
+        randomColor1 = Math.floor(Math.random()*16777215).toString(16);
+        $(".btnmain").css("background-color","#" + randomColor1);
+        randomColor2 = Math.floor(Math.random()*16777215).toString(16);
+        $(".btnright").css("background-color","#" + randomColor2);
+        break;
+      case 2:
+        randomColor1 = Math.floor(Math.random()*16777215).toString(16);
+        $(".btnleft").css("background-color","#" + randomColor1);
+        $(".btnmain").css("background-color","#fa5818");
+        randomColor2 = Math.floor(Math.random()*16777215).toString(16);
+        $(".btnright").css("background-color","#" + randomColor2);
+        break;
+      case 3:
+        randomColor1 = Math.floor(Math.random()*16777215).toString(16); 
+        $(".btnleft").css("background-color","#" + randomColor1);
+        randomColor2 = Math.floor(Math.random()*16777215).toString(16);
+        $(".btnmain").css("background-color","#" + randomColor2);
+        $(".btnright").css("background-color","#fa5818");
+        break;
+      }
+
+      console.log("makeColorTestfinish");
+    }
+
+    function resetColorTestWhenAnswerRight(){
+      console.log("correct")
+      answerStatus = true;
+      gradeNum += currectpoint;
+      grade.innerText = gradeNum;
+      currectNum ++;
+      makeColorTest();
+    }
+
+    function endMessageTestWhenAnswerWrong(){
+      console.log("wrong");
+      answerStatus = false;
+      $(".btnleft").add(".btnmain").add(".btnright").css({"left":"440px","transition":"0.5s","height":"150px","width":"150px"});
+      stopCount(index);
+    }
+    
+    function startanswer(){
+      index = total;
+
+      console.log("start answer");
+
+      $(".btnleft").click(function() {
+        if (answer == 1){
+          resetColorTestWhenAnswerRight();
+        }
+        else {
+          endMessageTestWhenAnswerWrong();
+        }
+      });
+
+      $(".btnmain").click(function() {
+        if(answer == 2){
+          resetColorTestWhenAnswerRight();
+        }
+        else {
+          endMessageTestWhenAnswerWrong();
+        }
+      });
+
+      $(".btnright").click(function() {
+        if(answer == 3){
+          resetColorTestWhenAnswerRight();
+        }
+        else {
+          endMessageTestWhenAnswerWrong();
+        }
+      });
+    }
+
+    
+    $(".popup-btn").click(function() {
+      var href = $(".popup-btn").attr("href")
+      $(href).fadeIn(250);
+      $(href).children$("popup-box").removeClass("transform-out").addClass("transform-in");
+      e.preventDefault();
+    });
+
+    $(".popup-close").click(function() {
+      closeWindow();
+      timmer = window.setInterval(countDown, 1000);
+    });
+
+    var timmer;
+    var index = 0;
+    var total = 5;
+    var answerStatus = true;
+    var currectNum = 0;
+    var currectlevel = 10;
+    var gradeNum = 0;
+    var CountDownNum = document.getElementById("countdownnum");
+    var grade = document.getElementById("grades");
+    var currectpoint = 1;
+
+    console.log(answerStatus);
+    if(answerStatus == true){
+      makeColorTest();
+      startanswer();
+    }
+
+    
+    
+</script>
